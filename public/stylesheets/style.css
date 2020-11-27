@@ -1,0 +1,21 @@
+
+body {
+  color: #ffffff;
+  font-size:13px;
+  text-align:center;
+  font-weight: bold;
+
+  /*//background-color: #050505;*/
+
+  margin: 0px;
+  overflow: hidden;
+}
+canvas, #container, body, #renderer{
+  background-color: white;
+}
+
+
+@media screen and (max-height: 450px) {
+
+
+}

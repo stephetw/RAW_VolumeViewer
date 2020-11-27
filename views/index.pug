@@ -1,0 +1,106 @@
+extends layout
+
+
+block imports
+
+  link(rel='stylesheet', href='/static/stylesheets/style.css')
+  link(rel='stylesheet', href='/static/stylesheets/bootstrap.min.css')
+  link(rel='stylesheet', href='/static/stylesheets/bootstrap-colorpicker.min.css')
+  script(src='/static/javascripts/jquery.slim.min.js')
+  script(src='/static/javascripts/bootstrap.min.js')
+  script(src='/static/javascripts/bootstrap.bundle.min.js')
+  script(src='/static/javascripts/bootstrap-colorpicker.min.js')
+  script(src='/static/javascripts/three.min.js')
+  script(type='module' src='/static/javascripts/three.module.js')
+  script(src='/static/javascripts/stats.min.js')
+  script(src='/static/javascripts/dat.gui.min.js')
+  script(type='module' src='/static/javascripts/OrbitControls.js')
+  script(type='module' src='/static/source/testMain.js')
+  //script(type='module' src='/javascripts/main.js')
+
+block content
+  nav.navbar.fixed-bottom.navbar-expand.navbar-dark.bg-dark
+    a.navbar-brand(href="#")= title
+    ul.navbar-nav.mr-auto
+      li.nav-item.btn-group.m-auto
+        button.btn.btn-dark.text-secondary.shadow(
+          type="button"
+          data-toggle="collapse"
+          data-target=".colorCollapse"
+          aria-controls="navbarToggleExternalContent"
+          aria-expanded="false" aria-label="Toggle navigation"
+          ) Color Controls
+          span.navbar-toggler-icon.ml-1
+      li.colorCollapse.collapse.mr-2
+        div.card.bg-transparent.border-0.ml-2.shadow-sm
+          a.text-white-50.text-center Transfer Function
+          img.card-img-bottom.rounded(id="transferFunctionImg")
+      li.nav-item.btn-group.m-auto
+        button.btn.btn-dark.text-secondary.shadow(
+          type="button"
+          data-toggle="collapse"
+          data-target=".volumeCollapse"
+          aria-controls="navbarToggleExternalContent"
+          aria-expanded="false" aria-label="Toggle navigation"
+        ) Volume Controls
+          span.navbar-toggler-icon.ml-1
+      li.nav-item.volumeCollapse.collapse
+        div.card.bg-transparent.border-0.ml-2
+          a.text-white-50.text-center Steps
+          input.custom-range(type="range" id="step-rng" min="5.0" max="512.0" step="1.0" value="128.0")
+      li.nav-item.volumeCollapse.collapse.ml-1.mr-3.my-auto.shadow
+        a.text-white-50.my-auto.shadow-sm.text-center(id="steps-v")
+      li.nav-item.volumeCollapse.collapse
+        div.card.bg-transparent.border-0.ml-2
+          a.text-white-50.text-center Alpha Correction
+          input.custom-range(type="range" id="alpha-rng" min="0.1" max="5.0" step="0.1" value="1.0")
+      li.nav-item.volumeCollapse.collapse.ml-1.mr-3.my-auto.shadow
+        a.text-white-50.my-auto.shadow-sm.text-center(id="alpha-v")
+      li.nav-item.btn-group.dropup.m-auto
+        a.btn.btn-dark.text-secondary.shadow.dropdown-toggle.text-white-50(href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+
+        div.dropdown-menu(aria-labelledby="dropdown10" id="texDropup")
+          a.dropdown-item(href="#" id="tex1") Aneurism
+          a.dropdown-item(href="#" id="tex2") Bonsai
+          a.dropdown-item(href="#" id="tex3") Foot
+          a.dropdown-item(href="#" id="tex4") Skull
+
+    div.btn.p-0.shadow-lg(id="statsCtn")
+
+
+
+
+    div.collapse.fixed-top.colorCollapse(id="navbarCollapse")
+      ul.navbar-nav.mr-auto.mt-2.mt-lg-0.align-content-center
+        li.nav-item
+          form.px-4.py-3
+            label.text-white.h4(id="tron1")="Step 1"
+            div.form-group
+              a.text-white-50 Color:
+              input.form-control.mt-1(id="cp-1" type="text" value="#FFFFFF")
+            div.form-group
+              a.text-white-50.mr-3 Step Position:
+                a.text-white-50(id="rng-1-v")
+              input.form-control-range.custom-range(type="range" id="rng-1" min="0.00" max="1.00" step="0.01" value="0.1")
+        li.nav-item
+          form.px-4.py-3
+            label.text-white.h4(id="tron2")="Step 2"
+            div.form-group
+              a.text-white-50 Color:
+              input.form-control.mt-1(id="cp-2" type="text" value="#000000" )
+            div.form-group
+              a.text-white-50.mr-3 Step Position:
+                a.text-white-50(id="rng-2-v")
+              input.form-control-range.custom-range(type="range" id="rng-2" max="1.00" step="0.01" value="0.7")
+        li.nav-item
+          form.px-4.py-3
+            label.text-white.h4(id="tron3")="Step 3"
+            div.form-group
+              a.text-white-50 Color:
+              input.form-control.mt-1(id="cp-3" type="text" value="#5200FF" )
+            div.form-group
+              a.text-white-50.mr-3 Step Position:
+                a.text-white-50(id="rng-3-v")
+              input.form-control-range.custom-range(type="range" id="rng-3" max="1.00" step="0.01" value="1.0")
+        //li.nav-item
+        //  img(id="transferFunctionImg")

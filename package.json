@@ -1,0 +1,25 @@
+{
+  "name": "webgl-volumerendering",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.3",
+    "bootstrap-colorpicker": "^3.2.0",
+    "cookie-parser": "~1.4.4",
+    "dat.gui": "^0.7.7",
+    "debug": "~2.6.9",
+    "ej2-javascript": "^15.143.0",
+    "express": "~4.16.1",
+    "gl-matrix": "^3.3.0",
+    "http-errors": "~1.6.3",
+    "jquery": "^3.5.1",
+    "morgan": "~1.9.1",
+    "pug": "^3.0.0",
+    "stats-js": "^1.0.1",
+    "three": "^0.121.1",
+    "three-orbitcontrols": "^2.110.3"
+  }
+}

@@ -1,0 +1,32 @@
+extends layout
+
+block content
+
+    nav(class="navbar fixed-bottom navbar-expand navbar-dark bg-dark")
+        a(class="navbar-brand" href="#")= title
+        button(class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation")
+        span(class="navbar-toggler-icon")
+        div(class="collapse navbar-collapse" id="navbarCollapse")
+            ul(class="navbar-nav mr-auto")
+                li(class="nav-item active")
+                    a(class="nav-link" href="#")="Home"
+                    span(class="sr-only")
+                li(class="nav-item")
+                    a(class="nav-link" href="#")="Link"
+                li(class="nav-item")
+                    a(class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true")="Disabled"
+                li(class="nav-item")
+                    form(class="px-4 py-3")
+                        label(id="tron1" class="text-white h4")="Step 1"
+                        div(class="form-group")
+                            input(id="cp-1" class="form-control" type="text" class="form-control" value="hex(#ffffff)" )
+                        //div(class="form-group")
+                            input(type="range" class="form-control-range" id="formControlRange")
+                    //a(class="nav-link" href="#" id="dropdown10" data-toggle="inline" aria-haspopup="true" aria-expanded="false")="Step 1"
+                    //div(class="inline" aria-labelledby="dropdown10")
+                      //a(class="dropdown-item" href="#" type="text")= "Opacity"
+                      //input(class="dropdown-item active" id="demo" type="text" class="form-control" value="hex(#ffffff)" )
+                    //div(class="dropdown-menu" aria-labelledby="dropdown10" )
+                    //a(class="dropdown-item" href="#" type="text")
+                    //input(id="demo" type="text" class="form-control" value="hex(#ffffff)" )
+                    //div(class="dropdown-menu" aria-labelledby="dropdown10")
