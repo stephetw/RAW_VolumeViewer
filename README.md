@@ -8,7 +8,7 @@ A nodejs Express (http server) web application to view scientific datasets
 In the project directory console, enter "npm start".
 Server is set to listen on port 3000
 ****
-###Other Info
+### Other Info
 
 Data sets used from https://klacansky.com/open-scivis-datasets/ 
 converted with external program to create a matrix of 16x16 zslices to be 
