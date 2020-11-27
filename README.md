@@ -16,6 +16,10 @@ later sampled as a 2D texture (WebGL1 does not support 3D texture sampling or st
 
 At this time only volumes 256 x 256 x z(up to 256) can be used
 
+****
+![Example](./show.png?raw=true)
+****
+
 ## References
 https://klacansky.com/open-scivis-datasets/ 
 
