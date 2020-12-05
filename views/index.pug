@@ -18,9 +18,13 @@ block imports
   script(type='module' src='/static/source/testMain.js')
 
 block content
-  nav.navbar.fixed-bottom.navbar-expand.navbar-dark.bg-dark
+
+  //---NAVBAR CONTAINER---
+  nav.navbar.fixed-bottom.navbar-expand.navbar-dark.bg-dark.p-3
     a.navbar-brand(href="#")= title
     ul.navbar-nav.mr-auto
+
+      //---COLOR BUTTON---
       li.nav-item.btn-group.m-auto
         button.btn.btn-dark.text-secondary.shadow(
           type="button"
@@ -30,10 +34,14 @@ block content
           aria-expanded="false" aria-label="Toggle navigation"
           ) Color Controls
           span.navbar-toggler-icon.ml-1
+
+      //---GRADIENT IMAGE--- (representing transfer function between step positions in shader program)
       li.colorCollapse.collapse.mr-2
         div.card.bg-transparent.border-0.ml-2.shadow-sm
           a.text-white-50.text-center Transfer Function
           img.card-img-bottom.rounded(id="transferFunctionImg")
+
+      //---VOLUME BUTTON---
       li.nav-item.btn-group.m-auto
         button.btn.btn-dark.text-secondary.shadow(
           type="button"
@@ -43,34 +51,26 @@ block content
           aria-expanded="false" aria-label="Toggle navigation"
         ) Volume Controls
           span.navbar-toggler-icon.ml-1
-      li.nav-item.volumeCollapse.collapse
-        div.card.bg-transparent.border-0.ml-2
-          a.text-white-50.text-center Steps
-          input.custom-range(type="range" id="step-rng" min="5.0" max="512.0" step="1.0" value="128.0")
-      li.nav-item.volumeCollapse.collapse.ml-1.mr-3.my-auto.shadow
-        a.text-white-50.my-auto.shadow-sm.text-center(id="steps-v")
-      li.nav-item.volumeCollapse.collapse
-        div.card.bg-transparent.border-0.ml-2
-          a.text-white-50.text-center Alpha Correction
-          input.custom-range(type="range" id="alpha-rng" min="0.1" max="5.0" step="0.1" value="1.0")
-      li.nav-item.volumeCollapse.collapse.ml-1.mr-3.my-auto.shadow
-        a.text-white-50.my-auto.shadow-sm.text-center(id="alpha-v")
+
+      //---DROPUP TOGGLER---
       li.nav-item.btn-group.dropup.m-auto
         a.btn.btn-dark.text-secondary.shadow.dropdown-toggle.text-white-50(href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
-
         div.dropdown-menu(aria-labelledby="dropdown10" id="texDropup")
           a.dropdown-item(href="#" id="tex1") Aneurism
           a.dropdown-item(href="#" id="tex2") Bonsai
           a.dropdown-item(href="#" id="tex3") Foot
           a.dropdown-item(href="#" id="tex4") Skull
 
+    //---STATS MONITOR---
     div.btn.p-0.shadow-lg(id="statsCtn")
 
 
+    div.fixed-top
 
+      //---COLOR CONTROLS---
+      ul.navbar-nav.colorCollapse.collapse.mb-0
 
-    div.collapse.fixed-top.colorCollapse(id="navbarCollapse")
-      ul.navbar-nav.mr-auto.mt-2.mt-lg-0.align-content-center
+        //---STEP 1 CONTAINER---
         li.nav-item
           form.px-4.py-3
             label.text-white.h4(id="tron1")="Step 1"
@@ -81,6 +81,8 @@ block content
               a.text-white-50.mr-3 Step Position:
                 a.text-white-50(id="rng-1-v")
               input.form-control-range.custom-range(type="range" id="rng-1" min="0.00" max="1.00" step="0.01" value="0.1")
+
+        //---STEP 2 CONTAINER---
         li.nav-item
           form.px-4.py-3
             label.text-white.h4(id="tron2")="Step 2"
@@ -91,6 +93,8 @@ block content
               a.text-white-50.mr-3 Step Position:
                 a.text-white-50(id="rng-2-v")
               input.form-control-range.custom-range(type="range" id="rng-2" max="1.00" step="0.01" value="0.7")
+
+        //---STEP 3 CONTAINER---
         li.nav-item
           form.px-4.py-3
             label.text-white.h4(id="tron3")="Step 3"
@@ -101,5 +105,55 @@ block content
               a.text-white-50.mr-3 Step Position:
                 a.text-white-50(id="rng-3-v")
               input.form-control-range.custom-range(type="range" id="rng-3" max="1.00" step="0.01" value="1.0")
-        //li.nav-item
-        //  img(id="transferFunctionImg")
+
+
+      div.volumeCollapse.collapse.float-sm-left
+        form.px-4.py-3
+
+          //---STEPS SLIDER---
+          div.form-group
+            a.text-white-50=" Steps [ "
+            a.text-white-50(id="steps-v")
+            a.text-white-50=" ]"
+          div.form-group
+            input.custom-range(type="range" id="step-rng" min="5.0" max="512.0" step="1.0" value="128.0" tabindex="-1")
+
+          //---ALPHA CORRECTION SLIDER---
+          div.form-group
+            a.text-white-50="Alpha Correction [ "
+            a.text-white-50(id="alpha-v")
+            a.text-white-50=" ]"
+          div.form-group
+            input.custom-range(type="range" id="alpha-rng" min="0.1" max="5.0" step="0.1" value="1.0" tabindex="-1")
+
+          //---CLIPPING PLANE SLIDERS---
+          div.form-group
+            a.text-white-50 Clipping Plane
+
+          div.form-group.mb-0
+            a.text-white-50="X:  "
+            a.text-white-50(id="clipX-v")
+          div.form-group.mb-0
+            input.custom-range(id='clipX' type="range" min="0.00" max="1.00" step="0.02" value="0.00" tabindex="-1")
+
+          div.form-group.mb-0
+            a.text-white-50="Y:  "
+            a.text-white-50(id="clipY-v")
+          div.form-group.mb-0
+            input.custom-range(id='clipY' type="range" min="0.00" max="1.00" step="0.02" value="0.00" tabindex="-1")
+
+          div.form-group.mb-0
+            a.text-white-50="Z:  "
+            a.text-white-50(id="clipZ-v")
+          div.form-group.mb-0
+            input.custom-range(id='clipZ' type="range" min="0.00" max="1.00" step="0.02" value="0.00" tabindex="-1")
+
+
+    //div.collapse.volumeCollapse
+    //  ul.navbar-nav.mr-auto.mt-2.mt-lg-0.align-content-center
+    //    li.nav-item.volumeCollapse.collapse
+    //      div.card.bg-transparent.border-0.ml-2
+    //        a.text-white-50.text-center Steps
+    //        input.custom-range(type="range" id="step-rng" min="5.0" max="512.0" step="1.0" value="128.0")
+    //    li.nav-item.volumeCollapse.collapse.ml-1.mr-3.my-auto.shadow
+    //      a.text-white-50.my-auto.shadow-sm.text-center(id="steps-v")
