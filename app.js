@@ -22,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
+//TODO! Clean up node modules
 
 // app.use( express.static(__dirname + '/node_modules/gl-matrix'));
 // app.use( express.static(__dirname + '/node_modules/dat.gui/build'));
