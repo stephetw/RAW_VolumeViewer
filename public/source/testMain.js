@@ -62,13 +62,23 @@ varying vec4 projectedCoords;
 uniform sampler2D tex, cubeTex, transferTex;
 uniform float steps;
 uniform float alphaCorrection;
+uniform float clipX, clipY, clipZ;
 
 const int MAX_STEPS = 887; //Max rendering volume dist = sqrt(3),
                            //max steps to travel dist = 1 = 512, ceil( sqrt(3) * 512 ) = 887
 
 
 vec4 sampleAs3DTexture( vec3 texCoord ){
-
+    if(texCoord.x < clipX){
+        return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    if(texCoord.y < clipY){
+        return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    if(texCoord.z < clipZ){
+        return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    
     vec4 colorSlice1, colorSlice2;
     vec2 texCoordSlice1, texCoordSlice2;
     float zSliceNumber1 = floor(texCoord.z  * 255.0); //Z slice from 0 - 255
@@ -163,6 +173,8 @@ var rtCubeTex = ['skull', 'foot', 'bonsai', 'aneurism'];
 var clock = new THREE.Clock();
 time = clock.getDelta();
 
+
+//TODO! Something is interrupting the camera orbit controls, probably having to do with the new clipping controls container
 $(function () {
 
     //jQuery initialization, instantiation, and event handling
@@ -177,6 +189,10 @@ $(function () {
 
     $('#steps-v').text($('#step-rng').val().toString());
     $('#alpha-v').text($('#alpha-rng').val().toString());
+
+    $('#clipX-v').text($('#clipX').val().toString());
+    $('#clipY-v').text($('#clipX').val().toString());
+    $('#clipZ-v').text($('#clipX').val().toString());
 
 
 
@@ -221,6 +237,18 @@ $(function () {
         $('#alpha-v').text($('#alpha-rng').val().toString());
         jQueryControls.alphaCorrection = $('#alpha-rng').val().toString();
         updateTextures();
+    });
+    $('#clipX').on('input', function (event) {
+        $('#clipX-v').text($('#clipX').val().toString());
+        jQueryControls.clipX = $('#clipX').val().toString();
+    });
+    $('#clipY').on('input', function (event) {
+        $('#clipY-v').text($('#clipY').val().toString());
+        jQueryControls.clipY = $('#clipY').val().toString();
+    });
+    $('#clipZ').on('input', function (event) {
+        $('#clipZ-v').text($('#clipZ').val().toString());
+        jQueryControls.clipZ = $('#clipZ').val().toString();
     });
 
     $('.dropdown-item').on('click', function (event) {
@@ -286,6 +314,9 @@ function init() {
         this.stepPos2 = $('#rng-2').val().toString();
         this.color3 = $('#cp-3').val().toString();
         this.stepPos3 = $('#rng-3').val().toString();
+        this.clipX = $('#clipX').val().toString();
+        this.clipY = $('#clipY').val().toString();
+        this.clipZ = $('#clipZ').val().toString();
 
     };
 
@@ -352,7 +383,10 @@ function init() {
             cubeTex: {type: "t", value: rtCubeTex[jQueryControls.model]},
             transferTex: {type: "t", value: transferTexture},
             steps: {type: "1f", value: jQueryControls.steps},
-            alphaCorrection: {type: "1f", value: jQueryControls.alphaCorrection}
+            alphaCorrection: {type: "1f", value: jQueryControls.alphaCorrection},
+            clipX: {type: "2f", value: jQueryControls.clipX},
+            clipY: {type: "2f", value: jQueryControls.clipY},
+            clipZ: {type: "2f", value: jQueryControls.clipZ}
         }
     });
 
@@ -428,5 +462,8 @@ function render(){
 
     materialSecondPass.uniforms.steps.value = jQueryControls.steps;
     materialSecondPass.uniforms.alphaCorrection.value = jQueryControls.alphaCorrection;
+    materialSecondPass.uniforms.clipX.value = jQueryControls.clipX;
+    materialSecondPass.uniforms.clipY.value = jQueryControls.clipY;
+    materialSecondPass.uniforms.clipZ.value = jQueryControls.clipZ;
 
 }
