@@ -19,7 +19,6 @@ varying vec3 worldCoords;
 
 void main(){
 
-    //Set the world space coordinates of the back faces vertices as output.
     worldCoords = position + vec3(0.5, 0.5, 0.5); //move it from [-0.5;0.5] to [0,1]
     gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 
@@ -33,7 +32,6 @@ varying vec3 worldCoords;
 
 void main(){
 
-    //The fragment's world space coordinates as fragment output.
     gl_FragColor = vec4( worldCoords.x , worldCoords.y, worldCoords.z, 1 );
 
 }
@@ -62,13 +60,46 @@ varying vec4 projectedCoords;
 uniform sampler2D tex, cubeTex, transferTex;
 uniform float steps;
 uniform float alphaCorrection;
+uniform float clipX, clipY, clipZ;
 
 const int MAX_STEPS = 887; //Max rendering volume dist = sqrt(3),
                            //max steps to travel dist = 1 = 512, ceil( sqrt(3) * 512 ) = 887
+                           
 
 
 vec4 sampleAs3DTexture( vec3 texCoord ){
 
+    if(clipX < 0.0){
+        if(texCoord.x > (clipX + 1.0)){
+            return vec4(0.0, 0.0, 0.0, 0.0);
+        }
+    }else if (texCoord.x < clipX){
+                return vec4(0.0, 0.0, 0.0, 0.0);
+            }
+            
+    if(clipY < 0.0){
+        if(texCoord.y > (clipY + 1.0)){
+            return vec4(0.0, 0.0, 0.0, 0.0);
+        }
+    }else if (texCoord.y < clipX){
+                return vec4(0.0, 0.0, 0.0, 0.0);
+            }
+            
+    if(clipZ < 0.0){
+        if(texCoord.z > (clipZ + 1.0)){
+            return vec4(0.0, 0.0, 0.0, 0.0);
+        }
+    }else if (texCoord.z < clipZ){
+                return vec4(0.0, 0.0, 0.0, 0.0);
+            }
+            
+    if(texCoord.y < clipY){
+        return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    if(texCoord.z < clipZ){
+        return vec4(0.0, 0.0, 0.0, 0.0);
+    }
+    
     vec4 colorSlice1, colorSlice2;
     vec2 texCoordSlice1, texCoordSlice2;
     float zSliceNumber1 = floor(texCoord.z  * 255.0); //Z slice from 0 - 255
@@ -120,9 +151,7 @@ void main( void ) {
     vec4 accumulatedColor = vec4(0.0);
     float accumulatedAlpha = 0.0;
     float accumulatedLength = 0.0;
-
-    //If we have twice as many samples, we only need ~1/2 the alpha per sample.
-    //Scaling by 256/10 just happens to give a good value for the alphaCorrection slider.
+    
     float alphaScaleFactor = 25.6 * delta;
 
     vec4 colorSample;
@@ -161,8 +190,18 @@ var loader, time, stats;
 var geometry, cube, scube, fcube;
 var rtCubeTex = ['skull', 'foot', 'bonsai', 'aneurism'];
 var clock = new THREE.Clock();
+var activeContainers ={
+    col1: true,
+    col2: true,
+    col3: true,
+    col4: true,
+};
+
+
 time = clock.getDelta();
 
+
+//TODO! Something is interrupting the camera orbit controls, probably having to do with the new clipping controls container
 $(function () {
 
     //jQuery initialization, instantiation, and event handling
@@ -170,13 +209,19 @@ $(function () {
     $('#cp-1').colorpicker().css('background-color',$('#cp-1').val());
     $('#cp-2').colorpicker().css('background-color',$('#cp-2').val());
     $('#cp-3').colorpicker().css('background-color',$('#cp-3').val());
+    $('#cp-4').colorpicker().css('background-color',$('#cp-4').val());
 
     $('#rng-1-v').text($('#rng-1').val().toString());
     $('#rng-2-v').text($('#rng-2').val().toString());
     $('#rng-3-v').text($('#rng-3').val().toString());
+    $('#rng-4-v').text($('#rng-4').val().toString());
 
     $('#steps-v').text($('#step-rng').val().toString());
     $('#alpha-v').text($('#alpha-rng').val().toString());
+
+    $('#clipX-v').text($('#clipX').val().toString());
+    $('#clipY-v').text($('#clipX').val().toString());
+    $('#clipZ-v').text($('#clipX').val().toString());
 
 
 
@@ -195,6 +240,11 @@ $(function () {
         jQueryControls.color3 = $('#cp-3').val().toString();
         updateTextures();
     });
+    $('#cp-4').on('colorpickerChange', function(event) {
+        $('#cp-4').css('background-color', event.color.toString());
+        jQueryControls.color3 = $('#cp-4').val().toString();
+        updateTextures();
+    });
 
     $('#rng-1').on('input', function (event) {
         $('#rng-1-v').text($('#rng-1').val().toString());
@@ -211,6 +261,11 @@ $(function () {
         jQueryControls.stepPos3 = $('#rng-3').val().toString();
         updateTextures();
     });
+    $('#rng-4').on('input', function (event) {
+        $('#rng-4-v').text($('#rng-4').val().toString());
+        jQueryControls.stepPos3 = $('#rng-4').val().toString();
+        updateTextures();
+    });
 
     $('#step-rng').on('input', function (event) {
         $('#steps-v').text($('#step-rng').val().toString());
@@ -222,49 +277,76 @@ $(function () {
         jQueryControls.alphaCorrection = $('#alpha-rng').val().toString();
         updateTextures();
     });
+    $('#clipX').on('input', function (event) {
+        $('#clipX-v').text($('#clipX').val().toString());
+        jQueryControls.clipX = $('#clipX').val().toString();
+    });
+    $('#clipY').on('input', function (event) {
+        $('#clipY-v').text($('#clipY').val().toString());
+        jQueryControls.clipY = $('#clipY').val().toString();
+    });
+    $('#clipZ').on('input', function (event) {
+        $('#clipZ-v').text($('#clipZ').val().toString());
+        jQueryControls.clipZ = $('#clipZ').val().toString();
+    });
 
     $('.dropdown-item').on('click', function (event) {
         console.log(event.target.id);
-        // console.log( $('#tex2').val());
-        // console.log($('.dropdown-item:selected'));
 
         switch (event.target.id) {
 
             case 'tex1':
                 jQueryControls.model = 'aneurism';
-                console.log("sec");
                 materialSecondPass.uniforms.cubeTex.value = rtCubeTex['aneurism'];
-                updateTextures();
                 break
             case 'tex2':
                 jQueryControls.model = 'bonsai';
                 materialSecondPass.uniforms.cubeTex.value = rtCubeTex['bonsai'];
-                updateTextures();
                 break
             case 'tex3':
                 jQueryControls.model = 'foot';
                 materialSecondPass.uniforms.cubeTex.value = rtCubeTex['foot'];
-                updateTextures();
                 break
             case 'tex4':
                 jQueryControls.model = 'skull';
                 materialSecondPass.uniforms.cubeTex.value = rtCubeTex['skull'];
-                updateTextures();
                 break
+            case '2colors':
+                makeTrue();
+                activeContainers.col3 = false;
+                activeContainers.col4 = false;
+                $('#cp3-contain').toggle(false);
+                $('#cp4-contain').toggle(false);
+                console.log(activeContainers.col3 + "feerf");
+                break;
+            case '3colors':
+                makeTrue();
+                activeContainers.col4 = false;
+                $('#cp4-contain').toggle(false);
+                break;
+            case '4colors':
+                makeTrue();
+                break;
+
             default:
                 break
 
         }
 
+        updateTextures();
+
     });
 
 
-    //
-    // const d = $('#tex1').val().toString();
-    // document.getElementById('dd').innerText = d;
-
 });
+function makeTrue() {
+    for(var color in activeContainers){
+        activeContainers[color] = true;
+    }
 
+    $('#cp3-contain').toggle(true);
+    $('#cp4-contain').toggle(true);
+}
 
 
 init();
@@ -272,8 +354,6 @@ animate();
 
 
 function init() {
-
-// let button = new Button();
 
 
     jQueryControls = new function () {
@@ -286,11 +366,15 @@ function init() {
         this.stepPos2 = $('#rng-2').val().toString();
         this.color3 = $('#cp-3').val().toString();
         this.stepPos3 = $('#rng-3').val().toString();
+        this.color4 = $('#cp-4').val().toString();
+        this.stepPos4 = $('#rng-4').val().toString();
+        this.clipX = $('#clipX').val().toString();
+        this.clipY = $('#clipY').val().toString();
+        this.clipZ = $('#clipZ').val().toString();
 
     };
 
     container = document.getElementById('container');
-    //container.appendChild(button.domElement);
 
     var screenSize = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
@@ -328,7 +412,7 @@ function init() {
     rtTexture = new THREE.WebGLRenderTarget(screenSize.x, screenSize.y,
         {
             minFilter: THREE.NearestFilter,
-            magFilter: THREE.NearestFilter,
+            magFilter: THREE.LinearFilter,
             wrapS: THREE.ClampToEdgeWrapping,
             wrapT: THREE.ClampToEdgeWrapping,
             format: THREE.RGBAFormat,
@@ -352,7 +436,10 @@ function init() {
             cubeTex: {type: "t", value: rtCubeTex[jQueryControls.model]},
             transferTex: {type: "t", value: transferTexture},
             steps: {type: "1f", value: jQueryControls.steps},
-            alphaCorrection: {type: "1f", value: jQueryControls.alphaCorrection}
+            alphaCorrection: {type: "1f", value: jQueryControls.alphaCorrection},
+            clipX: {type: "2f", value: jQueryControls.clipX},
+            clipY: {type: "2f", value: jQueryControls.clipY},
+            clipZ: {type: "2f", value: jQueryControls.clipZ}
         }
     });
 
@@ -380,6 +467,7 @@ function updateTextures(value) {
     materialSecondPass.uniforms.transferTex.value = updateTransferFunction();
 }
 function updateTransferFunction() {
+
     var canvas = document.createElement('canvas');
     canvas.height = 20;
     canvas.width = 256;
@@ -387,9 +475,16 @@ function updateTransferFunction() {
     var ctx = canvas.getContext('2d');
 
     var grd = ctx.createLinearGradient(0, 0, canvas.width - 1, canvas.height - 1);
+
+
+
     grd.addColorStop(jQueryControls.stepPos1, jQueryControls.color1);
     grd.addColorStop(jQueryControls.stepPos2, jQueryControls.color2);
-    grd.addColorStop(jQueryControls.stepPos3, jQueryControls.color3);
+    console.log(activeContainers.col3);
+    if(activeContainers.col3)
+        grd.addColorStop(jQueryControls.stepPos3, jQueryControls.color3);
+    if(activeContainers.col4)
+        grd.addColorStop(jQueryControls.stepPos4, jQueryControls.color4);
 
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, canvas.width - 1, canvas.height - 1);
@@ -428,5 +523,8 @@ function render(){
 
     materialSecondPass.uniforms.steps.value = jQueryControls.steps;
     materialSecondPass.uniforms.alphaCorrection.value = jQueryControls.alphaCorrection;
+    materialSecondPass.uniforms.clipX.value = jQueryControls.clipX;
+    materialSecondPass.uniforms.clipY.value = jQueryControls.clipY;
+    materialSecondPass.uniforms.clipZ.value = jQueryControls.clipZ;
 
 }

@@ -11,7 +11,6 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-//app.use('public',THREE);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -22,11 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
-
-// app.use( express.static(__dirname + '/node_modules/gl-matrix'));
-// app.use( express.static(__dirname + '/node_modules/dat.gui/build'));
-// app.use( express.static(__dirname + '/node_modules/stats-js/build'));
-// app.use( express.static(__dirname + '/node_modules/three/examples/jsm/controls'));
+//TODO! Clean up node modules
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
