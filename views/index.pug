@@ -35,11 +35,22 @@ block content
           ) Color Controls
           span.navbar-toggler-icon.ml-1
 
+
       //---GRADIENT IMAGE--- (representing transfer function between step positions in shader program)
       li.colorCollapse.collapse.mr-2
         div.card.bg-transparent.border-0.ml-2.shadow-sm
           a.text-white-50.text-center Transfer Function
           img.card-img-bottom.rounded(id="transferFunctionImg")
+
+      //---DROPUP COLORS---
+      li.nav-item.btn-group.dropup.m-auto
+        button.btn.btn-dark.text-secondary.shadow.dropdown-toggle.text-secondary(href="#" id="colordropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Colors
+        div.dropdown-menu.dropdown-menu-sm-left(aria-labelledby="colordropdown10" id="colorDropup" style="width: 20%")
+          a.dropdown-item(href="#" id="2colors") 2 Color Positions
+          a.dropdown-item(href="#" id="3colors") 3 Color Positions
+          a.dropdown-item(href="#" id="4colors") 4 Color Positions
+
+
 
       //---VOLUME BUTTON---
       li.nav-item.btn-group.m-auto
@@ -52,14 +63,15 @@ block content
         ) Volume Controls
           span.navbar-toggler-icon.ml-1
 
-      //---DROPUP TOGGLER---
+      //---DROPUP DATASET---
       li.nav-item.btn-group.dropup.m-auto
-        a.btn.btn-dark.text-secondary.shadow.dropdown-toggle.text-white-50(href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+        button.btn.btn-dark.text-secondary.shadow.dropdown-toggle.text-secondary(href="#" id="dropdown10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Dataset
         div.dropdown-menu(aria-labelledby="dropdown10" id="texDropup")
           a.dropdown-item(href="#" id="tex1") Aneurism
           a.dropdown-item(href="#" id="tex2") Bonsai
           a.dropdown-item(href="#" id="tex3") Foot
           a.dropdown-item(href="#" id="tex4") Skull
+
 
     //---STATS MONITOR---
     div.btn.p-0.shadow-lg(id="statsCtn")
@@ -71,7 +83,7 @@ block content
       ul.navbar-nav.colorCollapse.collapse.mb-0
 
         //---STEP 1 CONTAINER---
-        li.nav-item
+        li.nav-item(id="cp1-contain")
           form.px-4.py-3
             label.text-white.h4(id="tron1")="Step 1"
             div.form-group
@@ -83,7 +95,7 @@ block content
               input.form-control-range.custom-range(type="range" id="rng-1" min="0.00" max="1.00" step="0.01" value="0.1")
 
         //---STEP 2 CONTAINER---
-        li.nav-item
+        li.nav-item(id="cp2-contain")
           form.px-4.py-3
             label.text-white.h4(id="tron2")="Step 2"
             div.form-group
@@ -92,19 +104,31 @@ block content
             div.form-group
               a.text-white-50.mr-3 Step Position:
                 a.text-white-50(id="rng-2-v")
-              input.form-control-range.custom-range(type="range" id="rng-2" max="1.00" step="0.01" value="0.7")
+              input.form-control-range.custom-range(type="range" id="rng-2" max="1.00" step="0.01" value="0.4")
 
         //---STEP 3 CONTAINER---
-        li.nav-item
+        li.nav-item(id="cp3-contain")
           form.px-4.py-3
             label.text-white.h4(id="tron3")="Step 3"
             div.form-group
               a.text-white-50 Color:
-              input.form-control.mt-1(id="cp-3" type="text" value="#5200FF" )
+              input.form-control.mt-1(id="cp-3" type="text" value="#6200ff" )
             div.form-group
               a.text-white-50.mr-3 Step Position:
                 a.text-white-50(id="rng-3-v")
-              input.form-control-range.custom-range(type="range" id="rng-3" max="1.00" step="0.01" value="1.0")
+              input.form-control-range.custom-range(type="range" id="rng-3" max="1.00" step="0.01" value="0.7")
+
+        //---STEP 4 CONTAINER---
+        li.nav-item(id="cp4-contain")
+          form.px-4.py-3
+            label.text-white.h4(id="tron4")="Step 4"
+            div.form-group
+              a.text-white-50 Color:
+              input.form-control.mt-1(id="cp-4" type="text" value="#05ff4d")
+            div.form-group
+              a.text-white-50.mr-3 Step Position:
+                a.text-white-50(id="rng-4-v")
+              input.form-control-range.custom-range(type="range" id="rng-4" min="0.00" max="1.00" step="0.01" value="1.0")
 
 
       div.volumeCollapse.collapse.float-sm-left
@@ -134,26 +158,17 @@ block content
             a.text-white-50="X:  "
             a.text-white-50(id="clipX-v")
           div.form-group.mb-0
-            input.custom-range(id='clipX' type="range" min="0.00" max="1.00" step="0.01" value="0.00" tabindex="-1")
+            input.custom-range(id='clipX' onreset="value=\"0.00\"" type="range" min="-1.00" max="1.00" step="0.01" value="0.00" tabindex="-1")
 
           div.form-group.mb-0
             a.text-white-50="Y:  "
             a.text-white-50(id="clipY-v")
           div.form-group.mb-0
-            input.custom-range(id='clipY' type="range" min="0.00" max="1.00" step="0.01" value="0.00" tabindex="-1")
+            input.custom-range(id='clipY' onreset="value=\"0.00\"" type="range" min="-1.00" max="1.00" step="0.01" value="0.00" tabindex="-1")
 
           div.form-group.mb-0
             a.text-white-50="Z:  "
             a.text-white-50(id="clipZ-v")
           div.form-group.mb-0
-            input.custom-range(id='clipZ' type="range" min="0.00" max="1.00" step="0.01" value="0.00" tabindex="-1")
+            input.custom-range(id='clipZ' onreset="input=\"0.00\""  type="range" min="-1.00" max="1.00" step="0.01" value="0.00" tabindex="-1")
 
-
-    //div.collapse.volumeCollapse
-    //  ul.navbar-nav.mr-auto.mt-2.mt-lg-0.align-content-center
-    //    li.nav-item.volumeCollapse.collapse
-    //      div.card.bg-transparent.border-0.ml-2
-    //        a.text-white-50.text-center Steps
-    //        input.custom-range(type="range" id="step-rng" min="5.0" max="512.0" step="1.0" value="128.0")
-    //    li.nav-item.volumeCollapse.collapse.ml-1.mr-3.my-auto.shadow
-    //      a.text-white-50.my-auto.shadow-sm.text-center(id="steps-v")
