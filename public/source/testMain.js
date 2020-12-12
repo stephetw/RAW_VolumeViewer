@@ -81,7 +81,7 @@ vec4 sampleAs3DTexture( vec3 texCoord ){
         if(texCoord.y > (clipY + 1.0)){
             return vec4(0.0, 0.0, 0.0, 0.0);
         }
-    }else if (texCoord.y < clipX){
+    }else if (texCoord.y < clipY){
                 return vec4(0.0, 0.0, 0.0, 0.0);
             }
             
